@@ -27,10 +27,10 @@ cmake -G "Visual Studio 15 2017 Win64" ..
 cmake --build .
 ```
 
-This will generate executables both for client and server:
+This will generate executables both for client and server. If you are still in the bin directory you can run them like this:
 ``` bash
-bin/src/client/Debug/client.exe
-bin/src/server/Debug/server.exe
+src\client\Debug\client.exe
+src\server\Debug\server.exe
 ```
 
 # Testing
