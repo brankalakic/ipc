@@ -32,6 +32,7 @@ This will generate executables both for client and server that are stored in sep
 src\client\Debug\client.exe
 src\server\Debug\server.exe
 ```
+You can also find prebuilt binaries in ipc\prebuilt.
 
 # Testing
 ## Current main
