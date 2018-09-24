@@ -48,6 +48,8 @@ The last part of the test demonstrates the work of the asynchronous methods. Asy
 ## Commands
 ### sendString
 ```c++
+// A function for sending a string to the server.
+//
 // str is the string to be sent and stored on the server
 // key is the key at which to store the string.
 // pipename is the name of the pipe to connect to.
@@ -64,6 +66,7 @@ bool sendDouble(double val, double key, TCHAR *pipename);
 // A function for retrieving a string from the server
 // stored in a map with key having the value key.
 //
+// key is the key associated with the string.
 // pipename is the name of the pipe to connect to.
 // str is the variable in which the retrieved string will be
 // stored.
@@ -87,6 +90,8 @@ bool instantiateClassOnServer(std::wstring classId, int *objectID, TCHAR *pipena
 ```
 ### getObjectAttribute
 ```c++
+// A function that gets an object attribute from the server.
+//
 // objectId is ID of the object we want to access.
 // attributeID is the id for the object we want to access.
 // pipename is the name of the pipe to connect to.
@@ -96,6 +101,8 @@ LPVOID getObjectAttribute(int objectId, std::wstring attributeID, TCHAR *pipenam
 ```
 ### runMethodOnServer
 ```c++
+// A function for remotely running an object method.
+//
 // objectId is ID of the object we want to access.
 // methodID is the id of the method that we want to run on the object.
 // argc is the number of arguments to the method.
@@ -106,7 +113,7 @@ LPVOID getObjectAttribute(int objectId, std::wstring attributeID, TCHAR *pipenam
 LPVOID runMethodOnServer(int objectID, std::wstring methodID, size_t argc, TCHAR **argv, TCHAR *pipename, int*type);
 ```
 
-Each of the methods has an asynchronous counterpart. The only difference in the function signature apart from the name is the callback function that is passed as an input parameter.
+Each of the methods has an asynchronous counterpart. The only difference in the function signature apart from the name ending in "Async" is the callback function that is passed as an input parameter.
 
 ### sendStringAsync
 ```c++
