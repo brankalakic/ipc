@@ -1,21 +1,21 @@
 # Project Description
 
-This project implements a server and a client application for coding challenge: link.
-The server was based on the multithreaded server with named pipes as provided here: link.
+This project implements a server and a client application for coding challenge: https://gist.github.com/osamakhn/a20088c2cc45447ecd941ca121a8358b.
+The server was based on the multithreaded server with named pipes as provided here: https://docs.microsoft.com/en-us/windows/desktop/ipc/multithreaded-pipe-server and the client on the code from: https://docs.microsoft.com/en-us/windows/desktop/ipc/named-pipe-client.
 
 The server runs an infinite thread and waits for client commands. As they arrive, it creates a thread for each of the commands. After the command is performed, the thread exits. 
 
 The client can connect and make synchronous and asynchronous calls to the server. It makes asynchronous calls to the server by generating a new thread and running a command. Synchronous calls run in the calling thread.
 
-Methods for sending strings and doubles are implemented on the client as well as method for getting them from the server. Strings and doubles are stored at the server in two maps (one for each data type). The maps are indexed using keys of type double.
+Methods for sending to and getting from server for strings and doubles are implemented. Strings and doubles are stored at the server in two maps (one for each data type). The maps are indexed using keys of type double.
 
 Pipename can be passed as an input variable to all the commands. Right now pipename is hard-coded in the main at the client side. Server starts a pipe in its main with a hard-coded name as well.
 
-Client can instantiate classes on the server that have been registered at the server. Each objects must inherit from a class BaseClass that was implemented as part of the project. When a class is registered, an object is created from it and stored into a map. A client instinatiates an object by cloning that initial object and storing it in a different map.
+Client can instantiate classes on the server after they have been registered at the server. In order to be registered, the classes must inherit from class BaseClass that was implemented as part of the project. When a class is registered, an object is created from it and stored into a map. A client instinatiates an object by cloning that initial object and storing it in a different map.
 
 Client can access methods and attributes on the server through virtual methods reflectMethod and reflectAttribute. These methods must be implemented for each registered class.
 
-Class Car was created and inherits the BaseClass. This class is used to demonstrate object instantiation and running methods and getting attributes on the server remotely from the client.
+Class Car was created and inherits the BaseClass. This class is used to demonstrate remote object manipulation by the client.
 
 # Building and Running Server and Client
 
@@ -27,11 +27,12 @@ cmake -G "Visual Studio 15 2017 Win64" ..
 cmake --build .
 ```
 
-This will generate executables both for client and server:
+This will generate executables both for client and server that are stored in separate directories. If you are still in the bin directory you can run them like this:
 ``` bash
-bin/src/client/Debug/client.exe
-bin/src/server/Debug/server.exe
+src\client\Debug\client.exe
+src\server\Debug\server.exe
 ```
+You can also find prebuilt binaries in ipc\prebuilt.
 
 # Testing
 ## Current main
@@ -48,6 +49,8 @@ The last part of the test demonstrates the work of the asynchronous methods. Asy
 ## Commands
 ### sendString
 ```c++
+// A function for sending a string to the server.
+//
 // str is the string to be sent and stored on the server
 // key is the key at which to store the string.
 // pipename is the name of the pipe to connect to.
@@ -64,6 +67,7 @@ bool sendDouble(double val, double key, TCHAR *pipename);
 // A function for retrieving a string from the server
 // stored in a map with key having the value key.
 //
+// key is the key associated with the string.
 // pipename is the name of the pipe to connect to.
 // str is the variable in which the retrieved string will be
 // stored.
@@ -87,6 +91,8 @@ bool instantiateClassOnServer(std::wstring classId, int *objectID, TCHAR *pipena
 ```
 ### getObjectAttribute
 ```c++
+// A function that gets an object attribute from the server.
+//
 // objectId is ID of the object we want to access.
 // attributeID is the id for the object we want to access.
 // pipename is the name of the pipe to connect to.
@@ -96,6 +102,8 @@ LPVOID getObjectAttribute(int objectId, std::wstring attributeID, TCHAR *pipenam
 ```
 ### runMethodOnServer
 ```c++
+// A function for remotely running an object method.
+//
 // objectId is ID of the object we want to access.
 // methodID is the id of the method that we want to run on the object.
 // argc is the number of arguments to the method.
@@ -106,7 +114,7 @@ LPVOID getObjectAttribute(int objectId, std::wstring attributeID, TCHAR *pipenam
 LPVOID runMethodOnServer(int objectID, std::wstring methodID, size_t argc, TCHAR **argv, TCHAR *pipename, int*type);
 ```
 
-Each of the methods has an asynchronous counterpart. The only difference in the function signature apart from the name is the callback function that is passed as an input parameter.
+Each of the methods has an asynchronous counterpart. The only difference in the function signature apart from the name ending in "Async" is the callback function that is passed as an input parameter.
 
 ### sendStringAsync
 ```c++
